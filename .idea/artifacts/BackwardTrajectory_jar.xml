@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BackwardTrajectory:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BackwardTrajectory_jar</output-path>
+    <root id="archive" name="BackwardTrajectory.jar">
+      <element id="module-output" name="BackwardTrajectory" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/java类库/log4j-1.2.17.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/java类库/commons-logging-1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/java类库/httpclient-4.5.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/java类库/httpmime-4.5.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/java类库/httpcore-4.4.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/java类库/jsoup-1.11.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
