@@ -24,6 +24,7 @@ public class DownloadPicture {
             // 建立链接
             URL httpUrl = new URL(url);
             conn = (HttpURLConnection) httpUrl.openConnection();
+            conn.setInstanceFollowRedirects(false);
             //以Post方式提交表单，默认get方式
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
@@ -55,6 +56,8 @@ public class DownloadPicture {
                 System.out.println(p.toString());
                 System.out.println("name: " + p.getName());
                 System.out.println("url: " + p.getUrl());
+                System.out.println("下载失败: " + name);
+
 
             return false;
         }
