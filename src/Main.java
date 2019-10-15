@@ -22,11 +22,11 @@ public class Main {
         else
         {
 
-//            year = argus[0];
-//            month = argus[1];
-//            day = argus[2];
-//            hour = argus[3];
-//            duration = argus[4];
+            year = argus[0];
+            month = argus[1];
+            day = argus[2];
+            hour = argus[3];
+            duration = argus[4];
             List< List<String>>  data = GetCityInfor.getCityInfo();
             List<String> errorCity = new ArrayList<String>();
             int length = data.size();
@@ -40,7 +40,7 @@ public class Main {
                 if (number != "-1") {
                     System.out.println("Job number:" + number);
                 } else {
-                    System.out.println("Error. Cann't get job number.");
+                    System.out.println("下载失败.Error. Cann't get job number.");
                     errorCity.add(city);
                     continue;
 
