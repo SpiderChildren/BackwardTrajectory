@@ -42,17 +42,22 @@ public class Main {
                 } else {
                     System.out.println("Error. Cann't get job number.");
                     errorCity.add(city);
+                    continue;
 
                 }
                 String url = basic1 + number + basic2;
                 String storeUrl = "D:\\weatherPicture";
                 String name = city + year + month + day +".gif";
-                Thread.sleep(1000 * 10);   // 休眠10秒
+                Thread.sleep(1000 * 20);   // 休眠10秒
                 System.out.println("Picture url:" + url);
-                DownloadPicture.download(url, storeUrl, name);
+                if(DownloadPicture.download(url, storeUrl, name) == false)
+                {
+                    errorCity.add(city);
+                }
                 System.out.println("Now/Total:" + (i+1)+"/"+length);
             }
             System.out.println("These cities don't download ok.");
+            System.out.println( errorCity.size());
             for( String s : errorCity)
             {
                 System.out.println(s);
