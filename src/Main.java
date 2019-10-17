@@ -1,13 +1,21 @@
+import com.csvreader.CsvWriter;
 import org.apache.http.client.ClientProtocolException;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
     //https://ready.arl.noaa.gov/hypubout/157786_trj001.gif
+
+    public static ArrayList< ArrayList<String> > RetryList = new ArrayList<ArrayList<String>>();
+    public static int retryTime  = 3;
+    public static  String errorFile = "ErrorCity.csv";
 
     public static void main (String argus[]) throws ClientProtocolException, IOException, InterruptedException {
 
@@ -28,7 +36,7 @@ public class Main {
             hour = argus[3];
             duration = argus[4];
             List< List<String>>  data = GetCityInfor.getCityInfo();
-            List<String> errorCity = new ArrayList<String>();
+            ArrayList<String> errorCity = new ArrayList<String>();
             int length = data.size();
             for( int i = 0; i< data.size() ; i++)
             {
@@ -41,7 +49,11 @@ public class Main {
                     System.out.println("Job number:" + number);
                 } else {
                     System.out.println("下载失败.Error. Cann't get job number.");
-                    errorCity.add(city);
+                    ArrayList<String> relist = new ArrayList<String>();
+                    relist.add(city);
+                    relist.add(lon);
+                    relist.add(lat);
+                    RetryList.add(relist);
                     continue;
 
                 }
@@ -52,20 +64,71 @@ public class Main {
                 System.out.println("Picture url:" + url);
                 if(DownloadPicture.download(url, storeUrl, name) == false)
                 {
-                    errorCity.add(city);
+                    ArrayList<String> relist = new ArrayList<String>();
+                    relist.add(city);
+                    relist.add(lon);
+                    relist.add(lat);
+                    RetryList.add(relist);
                 }
                 System.out.println("Now/Total:" + (i+1)+"/"+length);
             }
+            for( int i = 0 ; i< retryTime; i++)
+            {
+             for( int j = 0 ; j < RetryList.size(); j++)
+             {
+                 ArrayList<String> relist = RetryList.get(j);
+                 String city = relist.get(0);
+                 String lon = relist.get(1);
+                 String lat = relist.get(2);
+                 String number  =  NaooTest.getInstance().test(lat , lon, year, month, day, hour , duration);
+                 if (number != "-1") {
+                     System.out.println("Job number:" + number);
+                 } else {
+                     System.out.println("下载失败.Error. Cann't get job number.");
+                     continue;
+                 }
+                 String url = basic1 + number + basic2;
+                 String storeUrl = "D:\\weatherPicture";
+                 String name = city + year + month + day +".gif";
+                 Thread.sleep(1000 * 20);   // 休眠10秒
+                 System.out.println("Picture url:" + url);
+                 if(DownloadPicture.download(url, storeUrl, name) == true)
+                 {
+                     RetryList.remove(relist);
+                 }
+             }
+            }
             System.out.println("These cities don't download ok.");
             System.out.println( errorCity.size());
-            for( String s : errorCity)
+            for( ArrayList<String> al : RetryList)
             {
-                System.out.println(s);
+                errorCity.add(al.get(0));
             }
+            writeCsv( errorFile , errorCity);
 
         }
 
     }
+
+
+    public static void writeCsv(String filePath , ArrayList<String> clist  )
+    {
+        try {
+            CsvWriter csvWriter = new CsvWriter( filePath ,',' , Charset.forName("GBK") );
+            for( String city : clist) {
+                String[] writeLine = {city};
+                System.out.println(writeLine);
+                csvWriter.writeRecord(writeLine);
+            }
+            csvWriter.close();
+
+        }
+        catch ( Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
 
 
