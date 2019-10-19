@@ -1,3 +1,6 @@
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,6 +11,8 @@ import java.net.URL;
 public class DownloadPicture {
 
 
+    //
+    public static boolean upload = true ;
 
     public static boolean download( String url , String storeUrl , String name )   {
         HttpURLConnection conn = null;
@@ -24,9 +29,6 @@ public class DownloadPicture {
             // 建立链接
             URL httpUrl = new URL(url);
             conn = (HttpURLConnection) httpUrl.openConnection();
-            conn.setConnectTimeout(120*1000);
-            conn.setReadTimeout(120 * 1000);
-            conn.setInstanceFollowRedirects(false);
             //以Post方式提交表单，默认get方式
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
@@ -42,13 +44,26 @@ public class DownloadPicture {
                 throw  new PictureNotExitException( "Picture don't exist!" , url , name );
             }
             inputStream = conn.getInputStream();
-            bis = new BufferedInputStream(inputStream);
-            byte b[] = new byte[1024];
-            int len = 0;
-            out = new FileOutputStream(file0 + "\\" +name );
+
+            if(upload)
+            {
+                String endpoint = "http://oss-cn-beijing.aliyuncs.com";
+                String accessKeyId = "LTAIKbvLeRIj2HLt";
+                String accessKeySecret = "7VlL3BgOfUZEZ35Wea88RNV7FFIMAB";
+                String bucketName = "ebd120-data-collection";
+                OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+                ossClient.putObject( bucketName , "BT/" + name, inputStream);
+
+            }
+            else {
+                bis = new BufferedInputStream(inputStream);
+                byte b[] = new byte[1024];
+                int len = 0;
+                out = new FileOutputStream(file0 + "\\" + name);
 //            out = new FileOutputStream(file0 + "/" +name );
-            while ((len = bis.read(b)) != -1) {
-                out.write(b, 0, len);
+                while ((len = bis.read(b)) != -1) {
+                    out.write(b, 0, len);
+                }
             }
             System.out.println("下载完成: " + name);
             return true;
@@ -58,14 +73,11 @@ public class DownloadPicture {
                 System.out.println(p.toString());
                 System.out.println("name: " + p.getName());
                 System.out.println("url: " + p.getUrl());
-                System.out.println("下载失败: " + name);
-
 
             return false;
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println("下载失败: " + name);
             return  false;
         } finally {
             try {
