@@ -30,6 +30,8 @@ public class DownloadPicture {
             URL httpUrl = new URL(url);
             conn = (HttpURLConnection) httpUrl.openConnection();
             //以Post方式提交表单，默认get方式
+            conn.setReadTimeout(60 *1000);
+            conn.setConnectTimeout(60*1000);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             conn.setDoOutput(true);
@@ -52,7 +54,7 @@ public class DownloadPicture {
                 String accessKeySecret = "7VlL3BgOfUZEZ35Wea88RNV7FFIMAB";
                 String bucketName = "ebd120-data-collection";
                 OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-                ossClient.putObject( bucketName , "BT/" + name, inputStream);
+                ossClient.putObject( bucketName , storeUrl+ name, inputStream);
 
             }
             else {
@@ -71,13 +73,13 @@ public class DownloadPicture {
         catch ( PictureNotExitException p)
         {
                 System.out.println(p.toString());
-                System.out.println("name: " + p.getName());
-                System.out.println("url: " + p.getUrl());
+                System.out.println("失败" +"name: " + p.getName() + "url: " + p.getUrl());
 
             return false;
         }
         catch (Exception e) {
             e.printStackTrace();
+            System.out.println("失败" +"name: " + name + "url: " + url);
             return  false;
         } finally {
             try {
