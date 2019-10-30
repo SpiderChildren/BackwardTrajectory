@@ -17,7 +17,7 @@ public class Main {
     public static ArrayList< ArrayList<String> > RetryList = new ArrayList<ArrayList<String>>();
     public static int retryTime  = 3;
     public static  String errorFile = "ErrorCity.csv";
-    public static  String storeUrl = "BT/";
+    public static  String storeUrl = "BT/";   //需要重新设置
     public static ConnentToMySQL connenter = null;
     private static String tableName = "BT";
 
