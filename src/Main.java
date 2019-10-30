@@ -18,11 +18,12 @@ public class Main {
     public static int retryTime  = 3;
     public static  String errorFile = "ErrorCity.csv";
     public static  String storeUrl = "BT/";
-    public static ConnentToMySQL connenter = new ConnentToMySQL();
+    public static ConnentToMySQL connenter = null;
     private static String tableName = "BT";
 
     public static void main (String argus[]) throws ClientProtocolException, IOException, InterruptedException {
 
+        connenter = new ConnentToMySQL();
         String basic1 = "https://ready.arl.noaa.gov/hypubout/";
         String basic2 = "_trj001.gif";
         String year = "19" , month = "10" , day = "12" ,hour  = "02",  duration = "168";
